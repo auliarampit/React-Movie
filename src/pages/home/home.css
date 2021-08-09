@@ -1,0 +1,14 @@
+.container-movies-home {
+    padding: 10px 20px;
+    align-items: center;
+    display: -webkit-box;
+    margin: 4px;
+    overflow: auto scroll;
+    /* Hide scrollbar for IE and Edge */
+    -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.container-movies-home::-webkit-scrollbar {
+    display: none;
+}
