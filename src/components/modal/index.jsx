@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function ModalComp({ nav, handleClose, open, img }) {
+export default function ModalComp({ nav, handleClose, open, data }) {
     const classes = useStyles();
 
     return (
@@ -55,10 +55,10 @@ export default function ModalComp({ nav, handleClose, open, img }) {
             >
                 <Fade in={open}>
                     <div className={classes.paper}>
-                        <img src={img ? img : imgDefault} alt="" className={classes.imgPoster} />
-                        
+                        <img src={data && data.Poster ? data.Poster : imgDefault} alt="" className={classes.imgPoster} />
+
                         <p id="transition-modal-description" className={classes.textTitle}>
-                            Title Movies watching movies watching movies
+                            {data && data.Title}
                         </p>
 
                         <Button
