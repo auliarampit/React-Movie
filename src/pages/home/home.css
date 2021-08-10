@@ -12,3 +12,11 @@
 .container-movies-home::-webkit-scrollbar {
     display: none;
 }
+
+.container-load-more-home {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-bottom: 17px;
+    margin-top: -17px;
+}

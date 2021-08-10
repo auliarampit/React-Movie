@@ -5,6 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import imgDefault from '../../assets/images/placeholder.png'
 import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -61,14 +62,18 @@ export default function ModalComp({ nav, handleClose, open, data }) {
                             {data && data.Title}
                         </p>
 
-                        <Button
-                            onClick={nav}
-                            className={classes.button}
-                            variant="contained"
-                            color="primary"
-                        >
-                            watching movies
-                        </Button>
+                        <Link to={{
+                            pathname: '/detail-movie',
+                            state: data
+                        }}>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                            >
+                                watching movies
+                            </Button>
+                        </Link>
 
                         <Button
                             onClick={handleClose}

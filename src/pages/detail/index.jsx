@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './detail.css'
 import { PlayerControls, TopBar } from '../../components'
-import ReactPlayer from 'react-player'
 import { makeStyles } from '@material-ui/core/styles'
 import { Share } from '@material-ui/icons'
 import imgDefault from '../../assets/images/placeholder.png'
+import { useLocation } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { get_detail } from '../../redux/detail/action'
 
 const useStyles = makeStyles({
     playerWrapper: {
@@ -14,10 +16,29 @@ const useStyles = makeStyles({
     },
 })
 
-function DetailMoviesScreen() {
+function DetailMoviesScreen(props) {
     const [muted, setMuted] = useState(false)
     const [playing, setPlaying] = useState(true)
+    const [data, setData] = useState(null)
+    const [movies, setMovies] = useState(null)
     const classes = useStyles()
+
+    const { state } = useLocation();
+
+    console.log('state', state);
+
+    useEffect(() => {
+        getDetail();
+
+    }, [])
+
+    const getDetail = () => {
+        props.onDetail_movies(state.imdbID, e => {
+            setData(e);
+            const dt = props.movies.Search.length > 4 ? props.movies.Search.slice(0, 4) : props.movies.Search.length
+            setMovies(dt)
+        })
+    }
 
     const handleMuted = () => {
         setMuted(!muted)
@@ -33,71 +54,49 @@ function DetailMoviesScreen() {
             <div className='detail-movies-screen'>
                 <div className="container-play-movie">
                     <div className={classes.playerWrapper}>
-                        <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U'
-                            muted={muted}
-                            playing={playing}
-                            height='100%'
-                            width='100%'
-                        />
 
                         <PlayerControls
                             handleMuted={handleMuted}
                             handlePlaying={handlePlaying}
                             muted={muted}
                             playing={playing}
+                            data={data}
                         />
                     </div>
                 </div>
 
                 <div className="desc-detail-movie">
                     <div className="column-desc-movie-detail">
-                        <span className='title-detail-movies'>Movie Title</span>
+                        <span className='title-detail-movies'>{data && data.Title}</span>
                         <div className="row-duration-detail">
-                            <span className="movie-duration-detail">Full</span>
+                            <span className="movie-duration-detail">{data && data.Runtime},</span>
+                            <span className="movie-duration-detail">{data && data.Genre},</span>
                             <Share />
                             <span className="movie-shared-detail">Shared</span>
                         </div>
                         <div className="row-duration-detail">
                             <span className="movie-Actor-detail">Actor:</span>
-                            <span className="movie-shared-detail">Allen Ren Xing Fei Wayne Liu Zhao Yihuan Ge Shimin Jun Sheng</span>
+                            <span className="movie-shared-detail">{data && data.Actors}</span>
                         </div>
                         <span className="text-desc-movie-detail">
-                            Gu Chuan pemuda yang penuh semangat dan punya masa depan cerah.
-                            Namun semua itu runtuh saat ia mengalami kecelakaan tragis yang mengakibatkan jantungnya terluka.
-                            Untuk menyelamatkan nyawanya, dokter melakukan transplantasi jantung artifisial.
-                            Saat mulai pulih, ia tak bisa lagi melakukan banyak olahraga dan menunjukkan kenaikan emosi yang kuat.
-                            Maka ia harus mengubah gaya hidupnya, yang berarti pula mengubah jati dirinya.
-                            Ia menghindari apapun yang menaikkan detak jantungnya,
-                            walau itu artinya ia menjadi bayang-bayang dirinya yang lama.
-                            Di tengah kedukaan itu, hadir Jiang Xiaoyu. Wanita itu juga punya masa lalu menyedihkan:
-                            ia yatim piatu sejak kecil. Namun, ia selalu ceria dan berpikir positif.
-                            Lama-lama, ada benih asmara antara Gu Chuan dan Xiao Yu. Namun, mengingat kondisi Gu Chuan,
-                            akankah hubungan asmara ini berhasil?
+                            {data && data.Plot}
                         </span>
                     </div>
 
                     <div className="column-desc-movie-detail-rigth">
                         <span className='title-detail-movies'>Most Popular Movies Today</span>
-                        <div className="popular-movies-today">
-                            <img src={imgDefault} alt="" className="img-popular-movies-today" />
-                            <span className="title-popular-movies-today">
-                                Title Movies
-                            </span>
-                        </div>
-
-                        <div className="popular-movies-today">
-                            <img src={imgDefault} alt="" className="img-popular-movies-today" />
-                            <span className="title-popular-movies-today">
-                                Title Movies
-                            </span>
-                        </div>
-
-                        <div className="popular-movies-today">
-                            <img src={imgDefault} alt="" className="img-popular-movies-today" />
-                            <span className="title-popular-movies-today">
-                                Title Movies
-                            </span>
-                        </div>
+                        {
+                            movies && movies.map((item) => {
+                                return (
+                                    <div className="popular-movies-today">
+                                        <img src={item.Poster} alt="" className="img-popular-movies-today" />
+                                        <span className="title-popular-movies-today">
+                                            {item.Title}
+                                        </span>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             </div>
@@ -105,4 +104,24 @@ function DetailMoviesScreen() {
     )
 }
 
-export default DetailMoviesScreen
+const mapStateToProps = state => {
+    // console.log('state', state);
+    return {
+        // detail: state.detail
+        movies: state.movies.moviesData
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onDetail_movies: async (i, callback) => {
+            const res = await dispatch(get_detail(i))
+            callback(res)
+        }
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(DetailMoviesScreen)

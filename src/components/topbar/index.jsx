@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TopBar() {
+export default function TopBar({search}) {
     const nav = useHistory()
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -171,6 +171,7 @@ export default function TopBar() {
                         </div>
                         <InputBase
                             placeholder="Search…"
+                            onChange={search}
                             classes={{
                                 root: classes.inputRoot,
                                 input: classes.inputInput,

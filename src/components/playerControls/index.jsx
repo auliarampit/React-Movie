@@ -11,11 +11,11 @@ const useStyles = makeStyles({
         left: 0,
         right: 0,
         bottom: 0,
-        // background: 'rgba(0, 0, 0, 6)',
+        // backgroundImage: 'rgba(0, 0, 0, 6)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        // zIndex: 1,
+        zIndex: 999,
     },
     controlsIcon: {
         color: '#777',
@@ -75,10 +75,12 @@ const PrettoSlider = withStyles({
     },
 })(Slider);
 
-function PlayerControls({ handlePlaying, handleMuted, playing, muted }) {
+function PlayerControls({ handlePlaying, handleMuted, playing, muted, data }) {
     const classes = useStyles()
     return (
-        <div className={classes.controlsWrapper}>
+        <div className={classes.controlsWrapper} style={{
+            backgroundImage: `url(${data && data.Poster})`,
+        }}>
             {/* top controls */}
             <Grid
                 container
@@ -90,7 +92,7 @@ function PlayerControls({ handlePlaying, handleMuted, playing, muted }) {
                 }}
             >
                 <Grid item >
-                    <Typography varian='h5' style={{ color: '#fff' }}>Movie Title Here</Typography>
+                    <Typography varian='h5' style={{ color: '#fff', fontWeight: 'bold' }}>{data && data.Title}</Typography>
                 </Grid>
 
                 <Grid item >

@@ -28,3 +28,31 @@ export const get_movies_all = page => {
         })
     }
 }
+
+export const search_movie_data = moviesData => {
+    return {
+        type: 'GET_MOVIES',
+        payload: {
+            moviesData,
+        }
+    }
+}
+
+export const search_movies = s => {
+    return dispatch => {
+        return new Promise((resolve) => {
+            axios.get(baseUrl + `s=${s}`)
+                .then((res) => {
+                    if (res.data.error) {
+                        resolve(res.data)
+                    } else {
+                        dispatch(search_movie_data(res.data))
+                        resolve(res.data)
+                    }
+                })
+                .catch((err) => {
+                    resolve(err)
+                })
+        })
+    }
+}
